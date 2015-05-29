@@ -1,0 +1,2 @@
+# TinsleyAI
+Draughts AI. 
