@@ -34,6 +34,8 @@ class game_iface():
         # Me King
         # You1 Player
         # You king
+        # y[0]: owner
+        # y[2]: board position
         return [(y[0],y[2]) for y in raw_soup  if len(y)==3]
      
     # Move piece
@@ -81,7 +83,7 @@ class game_iface():
             time.sleep(2)
             element = self.browser.find_by_name(end_pos)
             element.click()
-            
+            print self.browser.html
         except AttributeError:
             # One of the elements doesn't exist and the move failed
             return False
