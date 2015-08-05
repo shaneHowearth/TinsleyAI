@@ -1,15 +1,18 @@
 from world_interface import gamesforthebrain_com
 import sys
 import time
+import datetime
 
 class min_max():
     
-    def __init__(self):
-        
+    def __init__(self, debug=False):
+        self.debug = debug
         self.game = gamesforthebrain_com.game_iface()
         
     def get_start_state(self):
-        
+        print datetime.datetime.now()
+        if self.debug:
+            print self.game.get_state()
         return self.game.get_state()
         
     def get_successors(self, dict_board, position):   
@@ -36,22 +39,26 @@ class min_max():
         # Check there's room to the right to move
         if x < 7:
             move_to = 'space'+str(x+1)+str(y+1)
-            if y < 7 and dict_board[move_to] == 'gray.gif':
+            if y < 7 and ('you' in position[1] or 'k' in position[1]) \
+                and 'gray.gif' in dict_board[move_to]:
                 # 0
                 possible_moves.append(('move', 1, start_space, move_to))
                 
             move_to = 'space'+str(x+1)+str(y-1)
-            if y > 0 and dict_board[move_to] == 'gray.gif':
+            if y > 0 and ('me' in position[1] or 'k' in position[1]) \
+                and 'gray.gif' in dict_board[move_to]:
                 # 1
                 possible_moves.append(('move', 1, start_space, move_to))
         # Check there's room to the left to move
         if x > 0:
             move_to = 'space'+str(x-1)+str(y+1)
-            if y < 7 and dict_board[move_to] == 'gray.gif':
+            if y < 7 and ('you' in position[1] or 'k' in position[1]) \
+                and 'gray.gif' in dict_board[move_to]:
                 # 2
                 possible_moves.append(('move', 1, start_space, move_to))
             move_to = 'space'+str(x-1)+str(y-1)
-            if y > 0 and dict_board[move_to] == 'gray.gif':
+            if y > 0 and ('me' in position[1] or 'k' in position[1]) \
+                and 'gray.gif' in dict_board[move_to]:
                 # 3
                 possible_moves.append(('move', 1, start_space, move_to))
                 
@@ -59,12 +66,15 @@ class min_max():
         jump_possibles = []
         while True:
             before = len(jump_possibles)
+            if self.debug:
+                print "Get Successors: ", dict_board
             jump_possibles += self.check_jump(dict_board, position)
             if len(jump_possibles) == before:
                 break
         for jump_possible in jump_possibles:
             possible_moves.append(jump_possible)
-        # print possible_moves
+        if self.debug:
+            print possible_moves
         return possible_moves
         
     def check_jump(self, dict_board, start_pos):
@@ -76,6 +86,9 @@ class min_max():
             
             @return: int
         '''
+        if self.debug:
+            pass
+            print "Start Pos: ",start_pos
         jump_positions = []
         # Jumps require that y +/- 1 and x +/- 1 contain an opposing piece
         # and y +/- 2 and x +/- 2 is possible to land on
@@ -83,6 +96,8 @@ class min_max():
         # Computer normals y can only be decreased
         # Player normals y can only be increased
         start_pos_x,start_pos_y = int(start_pos[0][-2:-1]),int(start_pos[0][-1:])
+        start_piece = start_pos[1]
+        start_position = start_pos[0]
         #start_pos = start_pos[0]
         ###################################################
         # Computer #
@@ -91,7 +106,7 @@ class min_max():
         enemy = 'you'
         friend_king = 'me2k'
         enemy_king = 'you2k'
-        if friend in start_pos[1]:
+        if friend in start_piece:
             # Computer
             # Forward check: x +/- 1, y - 1 for opposition
             # But keep in mind that we cannot jump off the board
@@ -106,12 +121,15 @@ class min_max():
                     end_pos = 'space'+str(start_pos_x+2)+str(start_pos_y-2)
                     if "gray.gif" in dict_board[end_pos]:
                         copied_board = dict_board.copy()
+                        copied_board[start_pos] = 'gray.gif'
                         copied_board[check_pos] = 'gray.gif'
+                        copied_board[end_pos] = dict_board[start_position]
                         jump_positions.append((start_pos, 
                                                check_pos, 
                                                end_pos, gain, copied_board))
-                        
-                        return self.check_jump(copied_board, end_pos)
+                        if self.debug:
+                            print "Computer check jump", end_pos
+                        return self.check_jump(copied_board, (end_pos, copied_board[end_pos]))
             gain = 0           
             if start_pos_x > 1 and start_pos_y > 1:
                 check_pos = 'space'+str(start_pos_x-1)+str(start_pos_y-1)
@@ -123,14 +141,16 @@ class min_max():
                     end_pos = 'space'+str(start_pos_x-2)+str(start_pos_y-2)
                     if "gray.gif" in dict_board[end_pos]:
                         copied_board = dict_board.copy()
+                        copied_board[start_pos] = 'gray.gif'
                         copied_board[check_pos] = 'gray.gif'
+                        copied_board[end_pos] = dict_board[start_position]
                         jump_positions.append((start_pos, 
                                                check_pos, 
                                                end_pos, gain, copied_board))
                         
-                        return self.check_jump(copied_board, end_pos)
+                        return self.check_jump(copied_board, (end_pos, copied_board[end_pos]))
                         
-        if friend_king in start_pos[1]:
+        if friend_king in start_piece:
             # King so check backwards
             gain = 0
             if start_pos_x < 6 and start_pos_y < 6:
@@ -143,12 +163,14 @@ class min_max():
                     end_pos = 'space'+str(start_pos_x+2)+str(start_pos_y+2)
                     if "gray.gif" in dict_board[end_pos]:
                         copied_board = dict_board.copy()
+                        copied_board[start_pos] = 'gray.gif'
                         copied_board[check_pos] = 'gray.gif'
+                        copied_board[end_pos] = dict_board[start_position]
                         jump_positions.append((start_pos, 
                                                check_pos, 
                                                end_pos, gain, copied_board))
                         
-                        return self.check_jump(copied_board, end_pos)
+                        return self.check_jump(copied_board, (end_pos, copied_board[end_pos]))
             
             gain = 0           
             if start_pos_x > 1 and start_pos_y < 6:
@@ -161,12 +183,14 @@ class min_max():
                     end_pos = 'space'+str(start_pos_x-2)+str(start_pos_y+2)
                     if "gray.gif" in dict_board[end_pos]:
                         copied_board = dict_board.copy()
+                        copied_board[start_pos] = 'gray.gif'
                         copied_board[check_pos] = 'gray.gif'
+                        copied_board[end_pos] = dict_board[start_position]
                         jump_positions.append((start_pos, 
                                                check_pos, 
                                                end_pos, gain, copied_board))
                         
-                        return self.check_jump(copied_board, end_pos)
+                        return self.check_jump(copied_board, (end_pos, copied_board[end_pos]))
                         
         ###################################################
         # Us #
@@ -190,12 +214,14 @@ class min_max():
                     end_pos = 'space'+str(start_pos_x+2)+str(start_pos_y+2)
                     if "gray.gif" in dict_board[end_pos]:
                         copied_board = dict_board.copy()
+                        copied_board[start_pos] = 'gray.gif'
                         copied_board[check_pos] = 'gray.gif'
+                        copied_board[end_pos] = dict_board[start_position]
                         jump_positions.append((start_pos, 
                                                check_pos, 
                                                end_pos, gain, copied_board))
                         
-                        return self.check_jump(copied_board, end_pos)
+                        return self.check_jump(copied_board, (end_pos, copied_board[end_pos]))
             
             gain = 0           
             if start_pos_x > 1 and start_pos_y < 6:
@@ -208,14 +234,18 @@ class min_max():
                     end_pos = 'space'+str(start_pos_x-2)+str(start_pos_y+2)
                     if "gray.gif" in dict_board[end_pos]:
                         copied_board = dict_board.copy()
+                        copied_board[start_pos] = 'gray.gif'
                         copied_board[check_pos] = 'gray.gif'
+                        copied_board[end_pos] = dict_board[start_position]
                         jump_positions.append((start_pos, 
                                                check_pos, 
                                                end_pos, gain, copied_board))
+#                         print "Start: ", start_pos
+#                         print "Check: ", check_pos
+#                         print "End: ", end_pos
+                        return self.check_jump(copied_board, (end_pos, copied_board[end_pos]))
                         
-                        return self.check_jump(copied_board, end_pos)
-                        
-        if friend_king in start_pos[1]:
+        if friend_king in start_piece:
             # King so check backwards
             gain = 0
             if start_pos_x < 6 and start_pos_y > 1:
@@ -228,12 +258,14 @@ class min_max():
                     end_pos = 'space'+str(start_pos_x+2)+str(start_pos_y-2)
                     if "gray.gif" in dict_board[end_pos]:
                         copied_board = dict_board.copy()
+                        copied_board[start_pos] = 'gray.gif'
                         copied_board[check_pos] = 'gray.gif'
+                        copied_board[end_pos] = dict_board[start_position]
                         jump_positions.append((start_pos, 
                                                check_pos, 
                                                end_pos, gain, copied_board))
                         
-                        return self.check_jump(copied_board, end_pos)
+                        return self.check_jump(copied_board, (end_pos, copied_board[end_pos]))
             
             gain = 0           
             if start_pos_x > 1 and start_pos_y > 1:
@@ -247,12 +279,14 @@ class min_max():
                     if "gray.gif" in dict_board[end_pos]:
                         
                         copied_board = dict_board.copy()
+                        copied_board[start_pos] = 'gray.gif'
                         copied_board[check_pos] = 'gray.gif'
+                        copied_board[end_pos] = dict_board[start_position]
                         jump_positions.append((start_pos, 
                                                check_pos, 
                                                end_pos, gain, copied_board))
                         
-                        return self.check_jump(copied_board, end_pos)
+                        return self.check_jump(copied_board, (end_pos, copied_board[end_pos]))
         
         return jump_positions
             
@@ -292,6 +326,8 @@ class min_max():
             return True
         
         # Enemy has no moves
+        if self.debug:
+            print "Checking if Enemy has any moves"
         if len([self.get_successors(dict_board, x) for x in dict_board.items() if 'me' in x[1]]) == 0:
             return True
         
@@ -303,6 +339,8 @@ class min_max():
         
         highest_score = -sys.maxint - 1
         move = (None, sys.maxint)
+        if self.debug:
+            print "Get Max"
         for move_list in [self.get_successors(dict_board, x) for x in dict_board.items() if 'you' in x[1]]:
             for move in move_list:
                 # clone the dict_board
@@ -323,6 +361,8 @@ class min_max():
         
         lowest_score = sys.maxint
         move = None
+        if self.debug:
+            print "Get Min"
         for move_list in [self.get_successors(dict_board, x) for x in dict_board.items() if 'me' in x[1]]:
             for move in move_list:
                 # clone the dict_board
@@ -351,14 +391,20 @@ class min_max():
         if not self.is_complete(dict_board):
             highest_score = -sys.maxint - 1
             best_move = None
+            if self.debug:
+                pass
+                print "Search", dict_board
             for move_list in [self.get_successors(dict_board, us_item) for us_item in dict_board.items() if 'you' in us_item[1]]:
                 for move in move_list:
                     score = self.get_min(dict_board.copy(), 0)[1]
                     if score > highest_score:
                         highest_score = score
                         best_move = move
+            print best_move[2], best_move[-1:][0]
             self.game.move_piece(best_move[2], best_move[-1:][0])
             time.sleep(5)
+            if self.debug:
+                print "Recursive search call"
             self.search(self.get_start_state())
             return best_move
         
