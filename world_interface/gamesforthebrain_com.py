@@ -36,9 +36,12 @@ class game_iface():
         # You king
         # y[0]: owner
         # y[2]: board position
-        return [(y[0], y[2]) for y in raw_soup if len(y) == 3]
+        return self.to_dict([(y[0], y[2]) for y in raw_soup if len(y) == 3])
 
+    def to_dict(self, game):
+        return {x[1]: x[0] for x in game}
     # Move piece
+
     def move_piece(self, start_pos, end_pos):
         '''
             @start_pos: string
