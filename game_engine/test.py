@@ -3,7 +3,8 @@
 import datetime
 
 from minmax import min_max
-print datetime.datetime.now()
+start = datetime.datetime.now()
+print start
 a = min_max(debug=False)
 # print "State"
 # print a.get_state()
@@ -27,8 +28,9 @@ a = min_max(debug=False)
 #             print z.utility
 #             print z.board
 print "Build tree"
-tree = a.build_tree(a.get_state(), target='you', parent=None, levels=10)
-print datetime.datetime.now()
+tree = a.build_tree(a.get_state(), target='you', parent=None, levels=3)
+sec_start = datetime.datetime.now()
+print sec_start
 print tree
 
 
@@ -51,5 +53,7 @@ for child in tree.children:
     print "#########################"
     for move in child:
         dump_children(move, 1)
-print datetime.datetime.now()
+finish = datetime.datetime.now()
+print finish
+print finish - start
 print "Test ends"

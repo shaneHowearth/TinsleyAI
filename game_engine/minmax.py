@@ -253,6 +253,13 @@ class min_max():
         return possible_moves
 
     def build_tree(self, dict_board, target='you', parent=None, levels=3):
+        '''
+            Build the tree that is to be searched.
+            @input
+            dict_board: dictionary with current     positions of all pieces on the board
+
+            @return the root of the tree
+        '''
         if parent is None:
             # create a new move for the root of the tree
             rootnode = MoveNode(board=dict_board.copy(), utility=self.get_utility(dict_board.copy()), parent=None, children=[])
