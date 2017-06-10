@@ -25,8 +25,8 @@ class game_iface():
             @return: a dictionary.
                 Each key is a square on the board.
         '''
-        board = self.browser.find_by_id('board').html.replace('\n', '')
-        raw_soup = [x.split('"')[1:4] for x in str(board).split("><")]
+        board_html = self.browser.find_by_id('board').html.replace('\n', '')
+        board = [x.split('"')[1:4] for x in str(board_html).split("><")]
         '''
             Explanation of HTML:
             owner, space name
@@ -39,7 +39,7 @@ class game_iface():
             y[0]: owner
             y[2]: board position
         '''
-        return self.to_dict([(y[0], y[2]) for y in raw_soup if len(y) == 3])
+        return self.to_dict([(y[0], y[2]) for y in board if len(y) == 3])
 
     def to_dict(self, game):
         '''
