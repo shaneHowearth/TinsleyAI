@@ -1,7 +1,13 @@
 
 class MoveNode():
 
-    def __init__(self, board=None, utility=None, path=None, parent=None, children=[]):
+    def __init__(self,
+                 board=None,
+                 utility=None,
+                 path=None,
+                 parent=None,
+                 children=[]
+                 ):
         self.board = board
         self.utility = utility
         self.path = path
