@@ -81,11 +81,19 @@ class min_max():
         # If enemy occupies successor, check if jump possible
         # if jump possible check successors of that position for other enemies
         possible_moves = []
-        for move in self.check_single_moves(position, dict_board.copy(), path, parent):
+        for move in self.check_single_moves(position,
+                                            dict_board.copy(),
+                                            path,
+                                            parent
+                                            ):
             if move:
                 possible_moves.append(move)
 
-        for move in self.check_jumps(position, dict_board.copy(), path, parent):
+        for move in self.check_jumps(position,
+                                     dict_board.copy(),
+                                     path,
+                                     parent
+                                     ):
             if move:
                 possible_moves.append(move)
         return possible_moves
@@ -123,7 +131,10 @@ class min_max():
             # Computer
             # Forward check: x +/- 2, y - 2 for opposition
             jump_possibles.append(self.jump_possible(position,
-                                                     [[left, down], [right, down]],
+                                                     [
+                                                        [left, down],
+                                                        [right, down]
+                                                     ],
                                                      enemy,
                                                      dict_board,
                                                      path,
@@ -148,7 +159,10 @@ class min_max():
         if friend in start_piece:
             # Forward check: x +/- 2, y + 2 for us
             jump_possibles.append(self.jump_possible(position,
-                                                     [[left, up], [right, up]],
+                                                     [
+                                                        [left, up],
+                                                        [right, up]
+                                                     ],
                                                      enemy,
                                                      dict_board,
                                                      path,
@@ -157,7 +171,10 @@ class min_max():
         if friend_king in start_piece:
             # King so check backwards
             jump_possibles.append(self.jump_possible(position,
-                                                     [[left, down], [right, down]],
+                                                     [
+                                                        [left, down],
+                                                        [right, down]
+                                                     ],
                                                      enemy,
                                                      dict_board,
                                                      path,
@@ -165,7 +182,14 @@ class min_max():
 
         return jump_possibles
 
-    def jump_possible(self, position, landings, enemy, dict_board, path, parent):
+    def jump_possible(self,
+                      position,
+                      landings,
+                      enemy,
+                      dict_board,
+                      path,
+                      parent
+                      ):
         '''Calculate the new move'''
         start_x = int(position[0][-2:-1])
         start_y = int(position[0][-1:])
@@ -173,18 +197,32 @@ class min_max():
             if start_x + landing[0] <= 7 and start_x + landing[0] >= 0 and \
                     start_y + landing[1] <= 7 and start_y + landing[1] >= 0:
                 # if a jump is possible return the new move
-                move_to = 'space' + str(start_x + landing[0]) + str(start_y + landing[1])
-                mid_position = 'space' + str(start_x + landing[0] / 2) + str(start_y + landing[1] / 2)
+                move_to = 'space' + str(start_x + landing[0]) + \
+                        str(start_y + landing[1])
+                mid_position = 'space' + str(start_x + landing[0] / 2) + \
+                    str(start_y + landing[1] / 2)
                 new_board = dict_board.copy()
-                if new_board[move_to] == 'gray.gif' and enemy in new_board[mid_position]:
+                if (new_board[move_to] == 'gray.gif' and
+                        enemy in new_board[mid_position]):
 
                     new_board[move_to] = new_board[position[0]]
                     new_board[position[0]] = 'gray.gif'
                     new_path = path, position[0], move_to
                     jump_list = []
-                    jump_list.append(MoveNode(board=new_board, utility=self.get_utility(new_board), path=new_path, parent=parent))
-                    # recursive loop, we want to know if it's possible to make more jumps from the landing point
-                    for jump in self.check_jumps(position, new_board.copy(), path, parent):
+                    jump_list.append(
+                            MoveNode(board=new_board,
+                                     utility=self.get_utility(new_board),
+                                     path=new_path,
+                                     parent=parent
+                                     )
+                                    )
+                    # recursive loop, we want to know if it's possible to make
+                    # more jumps from the landing point
+                    for jump in self.check_jumps(position,
+                                                 new_board.copy(),
+                                                 path,
+                                                 parent
+                                                 ):
                         jump_list.append(jump)
                     return jump_list
 
@@ -202,10 +240,13 @@ class min_max():
                 new_board[move_to] = new_board[position[0]]
                 new_board[position[0]] = 'gray.gif'
                 new_path = path, position[0], move_to
-                possible_moves.append(MoveNode(board=new_board,
-                                               parent=parent,
-                                               utility=self.get_utility(new_board),
-                                               path=new_path))
+                possible_moves.append(
+                                MoveNode(board=new_board,
+                                         parent=parent,
+                                         utility=self.get_utility(new_board),
+                                         path=new_path
+                                         )
+                                )
 
             move_to = 'space' + str(x + 1) + str(y - 1)
             if y > 0 and ('me' in position[1] or 'k' in position[1]) \
@@ -216,11 +257,13 @@ class min_max():
                 new_board[move_to] = new_board[position[0]]
                 new_board[position[0]] = 'gray.gif'
                 new_path = path, position[0], move_to
-                possible_moves.append(MoveNode(board=new_board,
-                                               parent=parent,
-                                               utility=self.get_utility(new_board),
-                                               path=new_path))
-
+                possible_moves.append(
+                                MoveNode(board=new_board,
+                                         parent=parent,
+                                         utility=self.get_utility(new_board),
+                                         path=new_path
+                                         )
+                                )
         if x > 0:
             move_to = 'space' + str(x - 1) + str(y + 1)
             if y < 7 and ('you' in position[1] or 'k' in position[1]) \
@@ -231,11 +274,13 @@ class min_max():
                 new_board[move_to] = new_board[position[0]]
                 new_board[position[0]] = 'gray.gif'
                 new_path = path, position[0], move_to
-                possible_moves.append(MoveNode(board=new_board,
-                                               parent=parent,
-                                               utility=self.get_utility(new_board),
-                                               path=new_path))
-
+                possible_moves.append(
+                                MoveNode(board=new_board,
+                                         parent=parent,
+                                         utility=self.get_utility(new_board),
+                                         path=new_path
+                                         )
+                                )
             move_to = 'space' + str(x - 1) + str(y - 1)
             if y > 0 and ('me' in position[1] or 'k' in position[1]) \
                     and 'gray.gif' in dict_board[move_to]:
@@ -245,37 +290,57 @@ class min_max():
                 new_board[move_to] = new_board[position[0]]
                 new_board[position[0]] = 'gray.gif'
                 new_path = path, position[0], move_to
-                possible_moves.append(MoveNode(board=new_board,
-                                               parent=parent,
-                                               utility=self.get_utility(new_board),
-                                               path=new_path))
-
+                possible_moves.append(
+                                MoveNode(board=new_board,
+                                         parent=parent,
+                                         utility=self.get_utility(new_board),
+                                         path=new_path
+                                         )
+                                )
         return possible_moves
 
     def build_tree(self, dict_board, target='you', parent=None, levels=3):
         '''
             Build the tree that is to be searched.
             @input
-            dict_board: dictionary with current     positions of all pieces on the board
+            dict_board: dictionary with current
+                        positions of all pieces on the board
 
             @return the root of the tree
         '''
         if parent is None:
             # create a new move for the root of the tree
-            rootnode = MoveNode(board=dict_board.copy(), utility=self.get_utility(dict_board.copy()), parent=None, children=[])
-            rootnode.children = self.populate_layer(dict_board, 'you', parent=parent)
-            return self.build_tree(dict_board.copy(), target=target, parent=rootnode, levels=levels - 1)
+            rootnode = MoveNode(board=dict_board.copy(),
+                                utility=self.get_utility(dict_board.copy()),
+                                parent=None,
+                                children=[]
+                                )
+            rootnode.children = self.populate_layer(dict_board,
+                                                    target='you',
+                                                    parent=parent
+                                                    )
+            return self.build_tree(dict_board.copy(),
+                                   target=target,
+                                   parent=rootnode,
+                                   levels=levels - 1
+                                   )
 
         for child in parent.children:
 
             for move in child:
-                move.children = self.populate_layer(move.board, target='me', parent=move)
+                move.children = self.populate_layer(move.board,
+                                                    target='me',
+                                                    parent=move)
                 if target == 'you':
                     new_target = 'me'
                 else:
                     new_target = 'you'
                 if levels:
-                    self.build_tree(move.board.copy(), target=new_target, parent=move, levels=levels - 1)
+                    self.build_tree(move.board.copy(),
+                                    target=new_target,
+                                    parent=move,
+                                    levels=levels - 1
+                                    )
         return parent.get_root()
 
     def populate_layer(self, dict_board, target, parent):
