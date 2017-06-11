@@ -11,6 +11,8 @@ class MonteCarlo(object):
         seconds = kwargs.get('time', 30)
         self.calculation_time = datetime.timedelta(seconds=seconds)
         self.max_moves = kwargs.get('max_moves', 100)
+        self.wins = {}
+        self.plys = {}
 
     def update(self, state):
         # Takes a game state, and appends it to the history.
@@ -26,9 +28,12 @@ class MonteCarlo(object):
     def run_simulation(self):
         # Plays out a 'random' game from the current position, then updates the
         # statistics tables with the result.
+        visited_states = set()
         states_copy = self.states[:]
         state = states_copy[-1]
+        player = self.board.current_player(state)
 
+        expand = True
         for __ in range(self.max_moves):
             legal = self.board.legal_plays(states_copy)
 
@@ -36,6 +41,20 @@ class MonteCarlo(object):
             state = self.board.next_state(state, play)
             states_copy.append(state)
 
+            # `player` here refers to the player who moved into that state.
+            if expand and (player, state) not in self.plays:
+                expand = False
+                self.plays[(player, state)] = 0
+                self.wins[(player, state)] = 0
+
+            player = self.board.current_player(state)
             winner = self.board.winner(states_copy)
             if winner:
                 break
+            
+            for player, state in visited_states:
+                if (player, state) not in self.plays:
+                    continue
+                self.plays[(player, state)] += 1
+                if player == winner:
+                    self.wins[(player, state)] += 1
