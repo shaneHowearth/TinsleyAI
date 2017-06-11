@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import time
 import gamesforthebrain_com
-g = gamesforthebrain_com.game_iface()
+g = gamesforthebrain_com.game_iface('http://www.gamesforthebrain.com/game/checkers/')
 print('space02', 'space13')
 g.move_piece('space02', 'space13')
 time.sleep(2)
