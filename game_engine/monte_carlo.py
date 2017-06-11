@@ -1,4 +1,5 @@
 import datetime
+from random import choice
 
 
 class MonteCarlo(object):
@@ -9,6 +10,7 @@ class MonteCarlo(object):
         self.states = []
         seconds = kwargs.get('time', 30)
         self.calculation_time = datetime.timedelta(seconds=seconds)
+        self.max_moves = kwargs.get('max_moves', 100)
 
     def update(self, state):
         # Takes a game state, and appends it to the history.
@@ -24,4 +26,16 @@ class MonteCarlo(object):
     def run_simulation(self):
         # Plays out a 'random' game from the current position, then updates the
         # statistics tables with the result.
-        pass
+        states_copy = self.states[:]
+        state = states_copy[-1]
+
+        for __ in range(self.max_moves):
+            legal = self.board.legal_plays(states_copy)
+
+            play = choice(legal)
+            state = self.board.next_state(state, play)
+            states_copy.append(state)
+
+            winner = self.board.winner(states_copy)
+            if winner:
+                break
