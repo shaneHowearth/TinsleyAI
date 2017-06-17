@@ -322,34 +322,35 @@ class min_max():
                                 )
             # find all the children
             rootnode.children = self.populate_layer(dict_board,
-                                                    target='you',
-                                                    parent=parent
+                                                    target=target,
+                                                    parent=rootnode
                                                     )
+
             return self.build_tree(dict_board.copy(),
                                    target=3-target,
                                    parent=rootnode,
-                                   levels=levels - 1
+                                   levels=levels-1
                                    )
 
         for child in parent.children:
 
             for move in child:
                 move.children = self.populate_layer(move.board,
-                                                    target='me',
+                                                    target=target,
                                                     parent=move)
-                if target == 'you':
-                    new_target = 'me'
-                else:
-                    new_target = 'you'
                 if levels:
                     self.build_tree(move.board.copy(),
-                                    target=new_target,
+                                    target=3-target,
                                     parent=move,
-                                    levels=levels - 1
+                                    levels=levels-1
                                     )
         return parent.get_root()
 
     def populate_layer(self, dict_board, target, parent):
+        if target == US:
+            target = 'you'
+        else:
+            target = 'me'
         return [self.get_successors(self.get_state(), x, None, parent)
                 for x in dict_board.items() if target in x[1]]
 
