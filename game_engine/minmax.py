@@ -302,7 +302,7 @@ class min_max():
                                 )
         return possible_moves
 
-    def build_tree(self, dict_board, target='you', parent=None, levels=3):
+    def build_tree(self, dict_board, target=US, parent=None, levels=3):
         '''
             Build the tree that is to be searched.
             @input
@@ -326,7 +326,7 @@ class min_max():
                                                     parent=parent
                                                     )
             return self.build_tree(dict_board.copy(),
-                                   target=target,
+                                   target=3-target,
                                    parent=rootnode,
                                    levels=levels - 1
                                    )
