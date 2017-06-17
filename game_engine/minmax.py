@@ -5,6 +5,10 @@ from world_interface import gamesforthebrain_com
 
 US = 1
 COMPUTER = 2
+LEFTHANDSIDE = 7
+RIGHTHANDSIDE = 0
+TOPSIDE = 7
+BOTTOMSIDE = 0
 
 class min_max():
 
@@ -230,14 +234,19 @@ class min_max():
                     return jump_list
 
     def check_single_moves(self, position, dict_board, path, parent):
-        '''Check the right hand side for a possible move'''
+        '''
+           Check the right hand side for a possible move.
+          
+           @return: List of possible moves
+        '''
+        # convert position to more useful x and y
         x, y = int(position[0][-2:-1]), int(position[0][-1:])
         possible_moves = []
-        if x < 7:
+        if x < LEFTHANDSIDE:
             move_to = 'space' + str(x + 1) + str(y + 1)
-            if y < 7 and ('you' in position[1] or 'k' in position[1]) \
+            if y < TOPSIDE and ('you' in position[1] or 'k' in position[1]) \
                     and 'gray.gif' in dict_board[move_to]:
-                # 0
+                ''' Only Us or kings can move upwards. '''
                 # copy the board and make the move
                 new_board = dict_board.copy()
                 new_board[move_to] = new_board[position[0]]
@@ -252,9 +261,9 @@ class min_max():
                                 )
 
             move_to = 'space' + str(x + 1) + str(y - 1)
-            if y > 0 and ('me' in position[1] or 'k' in position[1]) \
+            if y > BOTTOMSIDE and ('me' in position[1] or 'k' in position[1]) \
                     and 'gray.gif' in dict_board[move_to]:
-                # 1
+                ''' Only Computer or king can move downwards. '''
                 # copy the board and make the move
                 new_board = dict_board.copy()
                 new_board[move_to] = new_board[position[0]]
@@ -267,11 +276,11 @@ class min_max():
                                          path=new_path
                                          )
                                 )
-        if x > 0:
+        if x > RIGHTHANDSIDE:
             move_to = 'space' + str(x - 1) + str(y + 1)
-            if y < 7 and ('you' in position[1] or 'k' in position[1]) \
+            if y < TOPSIDE and ('you' in position[1] or 'k' in position[1]) \
                     and 'gray.gif' in dict_board[move_to]:
-                # 2
+                ''' Only Us or kings can move upwards. '''
                 # copy the board and make the move
                 new_board = dict_board.copy()
                 new_board[move_to] = new_board[position[0]]
@@ -285,9 +294,9 @@ class min_max():
                                          )
                                 )
             move_to = 'space' + str(x - 1) + str(y - 1)
-            if y > 0 and ('me' in position[1] or 'k' in position[1]) \
+            if y > BOTTOMSIDE and ('me' in position[1] or 'k' in position[1]) \
                     and 'gray.gif' in dict_board[move_to]:
-                # 3
+                ''' Only Computer or king can move downwards. '''
                 # copy the board and make the move
                 new_board = dict_board.copy()
                 new_board[move_to] = new_board[position[0]]
