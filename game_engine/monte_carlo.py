@@ -19,7 +19,7 @@ class MonteCarlo(object):
         self.states.append(state)
 
     def get_play(self):
-        # Causes the AI t calculate the best move from the current game state
+        # Causes the AI to calculate the best move from the current game state
         # and return it.
         begin = datetime.datetime.utcnow()
         while datetime.datetime.utcnow() - begin < self.calculation_time:
