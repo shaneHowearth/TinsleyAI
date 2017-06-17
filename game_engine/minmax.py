@@ -306,18 +306,21 @@ class min_max():
         '''
             Build the tree that is to be searched.
             @input
-            dict_board: dictionary with current
-                        positions of all pieces on the board
-
+            dict_board: Dictionary, current positions of all pieces on the
+                        board.
+            target: Int, denoting whose move it is.
+            parent: MoveNode, that is being appende to.
+            levels: Int, number of levels left to calculate.
             @return the root of the tree
         '''
         if parent is None:
-            # create a new move for the root of the tree
+            # Root is the current board
             rootnode = MoveNode(board=dict_board.copy(),
                                 utility=self.get_utility(dict_board.copy()),
                                 parent=None,
                                 children=[]
                                 )
+            # find all the children
             rootnode.children = self.populate_layer(dict_board,
                                                     target='you',
                                                     parent=parent
