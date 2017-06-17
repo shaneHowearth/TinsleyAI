@@ -14,6 +14,10 @@ class MoveNode():
         self.parent = parent
         self.children = children
 
+    def __eq__(self, other=None):
+      """ Compare each object's board because the board is what denotes the state"""
+      return self.board == other.board
+    
     def get_root(self):
         ''' Walk up the tree to find the root node'''
         if self.parent is None:
