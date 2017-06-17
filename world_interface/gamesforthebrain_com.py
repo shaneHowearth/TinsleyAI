@@ -14,7 +14,7 @@ SLEEPTIME = 2
 
 class game_iface():
 
-    def __init__(self, game_address):
+    def __init__(self, game_address='http://www.gamesforthebrain.com/game/checkers/'):
         ''' Each instance of the application has its own browser. '''
         self.browser = Browser()
         self.browser.visit(game_address)
@@ -42,9 +42,7 @@ class game_iface():
         return self.to_dict([(y[0], y[2]) for y in board if len(y) == 3])
 
     def to_dict(self, game):
-        '''
-            Return a dictionary representation of the game
-        '''
+        ''' Return a dictionary representation of the game. '''
         return {x[1]: x[0] for x in game}
 
     def move_piece(self, start_pos, end_pos):
