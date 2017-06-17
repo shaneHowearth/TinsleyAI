@@ -62,8 +62,9 @@ class min_max():
         # TODO list:
         # Control of territory is good
         # Further up the board is good
-        return ((len(us_norm) + len(us_kings) * 5) -
-                (len(computer_norm) + len(computer_kings) * 5))
+        KING_BONUS = 5
+        return ((len(us_norm) + len(us_kings) * KING_BONUS) -
+                (len(computer_norm) + len(computer_kings) * KING_BONUS))
 
     def get_successors(self, dict_board, position, path, parent):
         '''
