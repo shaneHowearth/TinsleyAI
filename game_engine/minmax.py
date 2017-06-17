@@ -1,6 +1,6 @@
 import datetime
 
-from moves import MoveNode
+from .moves import MoveNode
 from world_interface import gamesforthebrain_com
 
 
