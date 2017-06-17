@@ -3,6 +3,8 @@ import datetime
 from .moves import MoveNode
 from world_interface import gamesforthebrain_com
 
+US = 1
+COMPUTER = 2
 
 class min_max():
 
@@ -347,3 +349,4 @@ class min_max():
     def populate_layer(self, dict_board, target, parent):
         return [self.get_successors(self.get_state(), x, None, parent)
                 for x in dict_board.items() if target in x[1]]
+
