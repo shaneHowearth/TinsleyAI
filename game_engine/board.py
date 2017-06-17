@@ -1,7 +1,7 @@
 class Board(object):
     def start(self):
         # Returns a representation of the starting state of the game.
-        pass
+        self.game = gamesforthebrain_com.game_iface()
 
     def current_player(self, state):
         # Takes the game state, and returns the current player's number.
