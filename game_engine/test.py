@@ -2,7 +2,7 @@
 
 import datetime
 
-from minmax import min_max
+from .minmax import min_max
 start = datetime.datetime.now()
 print start
 a = min_max(debug=False)
@@ -28,7 +28,7 @@ a = min_max(debug=False)
 #             print z.utility
 #             print z.board
 print "Build tree"
-tree = a.build_tree(a.get_state(), target='you', parent=None, levels=3)
+tree = a.build_tree(a.get_state(), target='you', parent=None, levels=2)
 sec_start = datetime.datetime.now()
 print sec_start
 print tree
