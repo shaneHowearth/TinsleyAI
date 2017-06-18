@@ -19,9 +19,6 @@ class min_max():
 
     def get_state(self):
         '''Get the current state of the game'''
-        if self.debug:
-            print datetime.datetime.now()
-            print self.game.get_state()
         return self.game.get_state()
 
     def is_complete(self, dict_board):
@@ -94,6 +91,7 @@ class min_max():
                                             parent
                                             ):
             if move:
+                print "Single Move: ", move
                 possible_moves.append(move)
 
         for move in self.check_jumps(position,
@@ -114,8 +112,6 @@ class min_max():
 
             @return: int
         '''
-        if self.debug:
-            print "Start Pos: ", position
         # Jumps require that y +/- 1 and x +/- 1 contain an opposing piece
         # and y +/- 2 and x +/- 2 is possible to land on
         # Kings can go in any direction
@@ -365,6 +361,7 @@ class min_max():
             target = 'you'
         else:
             target = 'me'
-        return [self.get_successors(self.get_state(), x, None, parent)
+        return [self.get_successors(dict_board, x, None, parent)
                 for x in dict_board.items() if target in x[1]]
+
 
