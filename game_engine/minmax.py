@@ -102,7 +102,7 @@ class min_max():
                                      parent
                                      ):
             if move:
-                possible_moves.append(move)
+                possible_moves.extend(move)
         return possible_moves
 
     def check_jumps(self, position, dict_board, path, parent):
@@ -230,8 +230,10 @@ class min_max():
                                                  path,
                                                  parent
                                                  ):
-                        jump_list.append(jump)
-                    return jump_list
+                        if jump:
+                          jump_list.extend(jump)
+                    if jump_list:
+                      return jump_list
 
     def check_single_moves(self, position, dict_board, path, parent):
         '''
