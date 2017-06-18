@@ -60,3 +60,9 @@ target/
 
 # Vim 
 *.swp
+
+# Local debug files
+output*
+
+# Local copy of site
+site/
