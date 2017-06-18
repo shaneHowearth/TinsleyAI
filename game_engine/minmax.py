@@ -136,7 +136,7 @@ class min_max():
         jump_possibles = []
         if friend in start_piece:
             # Computer
-            # Forward check: x +/- 2, y - 2 for opposition
+            # Forward check: x +/- 2, y - 2 for opposition.
             jump_possibles.append(self.jump_possible(position,
                                                      [
                                                         [left, down],
@@ -148,7 +148,7 @@ class min_max():
                                                      parent))
 
         if friend_king in start_piece:
-            # King so check backwards too
+            # King so check backwards too.
             jump_possibles.append(self.jump_possible(position,
                                                      [[left, up], [right, up]],
                                                      enemy,
@@ -164,7 +164,7 @@ class min_max():
         enemy = 'me'
         friend_king = 'you2k'
         if friend in start_piece:
-            # Forward check: x +/- 2, y + 2 for us
+            # Forward check: x +/- 2, y + 2 for us.
             jump_possibles.append(self.jump_possible(position,
                                                      [
                                                         [left, up],
