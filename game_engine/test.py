@@ -36,12 +36,12 @@ print tree
 
 def dump_children(move, count):
     print "Next level", count
-    print move
-    print move.board
-    print move.parent
-    print move.get_root()
-    print move.path
-    print move.utility
+    print "Move: ",move
+    # print move.board
+    print "Parent: ", move.parent
+    print "Root: ", move.get_root()
+    print "Path: ", move.path
+    print "Utility: ",move.utility
     new_count = count + 1
     for child in move.children:
         for sec_move in child:
@@ -53,6 +53,10 @@ for child in tree.children:
     print "#########################"
     for move in child:
         dump_children(move, 1)
+    print "#########################"
+    print "##      END CHILD      ##"
+    print "#########################"
+
 finish = datetime.datetime.now()
 print finish
 print finish - start
