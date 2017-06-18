@@ -28,7 +28,7 @@ a = min_max(debug=False)
 #             print z.utility
 #             print z.board
 print "Build tree"
-tree = a.build_tree(a.get_state(), target=US, parent=None, levels=2)
+tree = a.build_tree(a.get_state(), target=US, parent=None, levels=4)
 sec_start = datetime.datetime.now()
 print sec_start
 print tree
