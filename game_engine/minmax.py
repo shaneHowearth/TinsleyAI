@@ -211,9 +211,12 @@ class min_max():
                 new_board = dict_board.copy()
                 if (new_board[move_to] == 'gray.gif' and
                         enemy in new_board[mid_position]):
-
+                    # move the piece to the new position
                     new_board[move_to] = new_board[position[0]]
+                    # remove the piece from the old position
                     new_board[position[0]] = 'gray.gif'
+                    # remove the enemey from the board
+                    new_board[mid_position] = 'gray.gif'
                     new_path = path, position[0], move_to
                     jump_list = []
                     jump_list.append(
