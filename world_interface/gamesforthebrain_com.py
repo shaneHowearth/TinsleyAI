@@ -25,7 +25,7 @@ class game_iface():
             @return: a dictionary.
                 Each key is a square on the board.
         '''
-        board_html = self.browser.find_by_id('board').html.replace('\n', '')
+        board_html = self.browser.find_by_.id('board').html.replace('\n', '')
         board = [x.split('"')[1:4] for x in str(board_html).split("><")]
         '''
             Explanation of HTML:
