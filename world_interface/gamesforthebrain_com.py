@@ -47,6 +47,8 @@ class game_iface():
 
     def move_piece(self, start_pos, end_pos):
         '''
+            Move a piece from one position to another.
+
             @start_pos: string
                 name of the position of the piece to be moved
 
@@ -72,6 +74,8 @@ class game_iface():
 
     def double_jump(self, start_pos, interim_pos, end_pos):
         '''
+            Jumping over two pieces.
+            
             @start_pos: string
                 name of the position of the piece to be moved
 
