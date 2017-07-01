@@ -1,7 +1,6 @@
 import datetime
 
 from .moves import MoveNode
-from world_interface import gamesforthebrain_com
 
 US = 1
 COMPUTER = 2
@@ -12,10 +11,10 @@ BOTTOMSIDE = 0
 
 class min_max():
 
-    def __init__(self, debug=False):
+    def __init__(self, debug=False, game=None):
         '''Start a new game'''
         self.debug = debug
-        self.game = gamesforthebrain_com.game_iface()
+        self.game = game
 
     def get_state(self):
         '''Get the current state of the game'''
